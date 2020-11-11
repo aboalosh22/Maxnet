@@ -16,6 +16,49 @@
     });
   });
 </script>
+<script>
+var sendNotification = function(data) {
+  var headers = {
+    "Content-Type": "application/json; charset=utf-8",
+    "Authorization": "Basic MTQxNGZjMzYtYTZmOS00NDNmLWJlOGYtMTUwNmFjODhkNjJl"
+  };
+  
+  var options = {
+    host: "onesignal.com",
+    port: 443,
+    path: "/api/v1/notifications",
+    method: "POST",
+    headers: headers
+  };
+  
+  var https = require('https');
+  var req = https.request(options, function(res) {  
+    res.on('data', function(data) {
+      console.log("Response:");
+      console.log(JSON.parse(data));
+    });
+  });
+  
+  req.on('error', function(e) {
+    console.log("ERROR:");
+    console.log(e);
+  });
+  
+  req.write(JSON.stringify(data));
+  req.end();
+};
+
+var message = { 
+  app_id: "b07f8fb0-689f-4c71-99b2-2845b64aee18",
+  contents: {"en": "English Message"},
+  filters: [
+        {"field": "tag", "key": "level", "relation": "=", "value": "10"}, 
+        {"operator": "OR"}, {"field": "amount_spent", "relation": ">", "value": "0"}
+    ]
+};
+
+sendNotification(message);	
+</script>
 </head>
 <body>
     
